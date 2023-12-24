@@ -24,16 +24,20 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: |
+          cd MuqeemAPINew  # Change to the project directory
+          dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ./publish/MuqeemAPINew MuqeemAPINew/MuqeemAPINew.csproj
+        run: |
+          cd MuqeemAPINew  # Change to the project directory
+          dotnet publish -c Release -o ./publish/MuqeemAPINew
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: ./publish
+          path: ./MuqeemAPINew/publish
 
   deploy:
     runs-on: windows-latest
@@ -53,7 +57,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'MuqeemAPINew'  # Use the project name from the Solution file
+          app-name: 'MuqeemAPINew'
           slot-name: 'Production'
           package: ./publish
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C435A7AD30EF45EB9DE3FD1380C070EF }}
