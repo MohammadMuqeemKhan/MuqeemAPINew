@@ -57,7 +57,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'MuqeemAPINew'
+          app-name: 'muqeem'
           slot-name: 'Production'
           package: ./publish
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C435A7AD30EF45EB9DE3FD1380C070EF }}
