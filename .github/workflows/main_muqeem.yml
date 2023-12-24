@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy ASP.Net Core app to Azure Web App - muqeem
+name: Build and deploy ASP.Net Core app to Azure Web App
 
 on:
   push:
@@ -20,23 +17,22 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.x'
-          include-prerelease: true
+          dotnet-version: '5.x'  # Adjust to the appropriate version
 
       - name: Build with dotnet
         run: |
-          cd MuqeemAPINew  # Change to the project directory
+          cd MuqeemAPINew
           dotnet build --configuration Release
 
-      - name: dotnet publish
+      - name: Dotnet publish
         run: |
-          cd MuqeemAPINew  # Change to the project directory
-          dotnet publish -c Release -o ./publish/MuqeemAPINew
+          cd MuqeemAPINew
+          dotnet publish -c Release -o ./publish
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
-          name: .net-app
+          name: dotnet-app
           path: ./MuqeemAPINew/publish
 
   deploy:
@@ -44,20 +40,19 @@ jobs:
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2
         with:
-          name: .net-app
+          name: dotnet-app
           path: ./publish
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'muqeem'
+          app-name: 'muqeem'  # Replace with your actual Azure Web App name
           slot-name: 'Production'
           package: ./publish
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C435A7AD30EF45EB9DE3FD1380C070EF }}
